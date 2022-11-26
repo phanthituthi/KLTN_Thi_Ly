@@ -210,6 +210,7 @@ class AuthService {
       console.log(error);
     }
   }
+
   async twilioviryfyOTP(phone, code) {
     try {
       const verifyOTP = await twilioClient.verify
@@ -218,11 +219,12 @@ class AuthService {
           to: `+84${phone}`,
           code: code,
         });
+
       if (verifyOTP.valid) {
-        console.log("Mã OTP chính xác!!!");
+        return 1;
       }
       if (!verifyOTP.valid) {
-        console.log("Mã OTP chưa chính xác!!!");
+        return 2;
       }
     } catch (error) {
       console.log(error);
@@ -239,7 +241,7 @@ class AuthService {
   }
 
   async checkuser(username) {
-    console.log(123,username);
+    await userValidate.checkInfo(username);
     const { nModified } = await User.findOne({ username: username });
     if (nModified === 0) throw new NotFoundError("User");
   }

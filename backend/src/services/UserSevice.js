@@ -6,6 +6,7 @@ const Conversation = require("../models/Conversation");
 const commonUtils = require("../utils/commonUtils");
 const ObjectId = require("mongoose").Types.ObjectId;
 const bcrypt = require("bcryptjs");
+const userValidate = require("../validate/userValidate");
 
 const FRIEND_STATUS = ["FRIEND", "FOLLOWER", "YOU_FOLLOW", "NOT_FRIEND"];
 
@@ -159,6 +160,7 @@ class UserService {
   }
 
   async adminchangepassword(_id, password) {
+    await userValidate.checkAdminChangeUserPassword(password);
     const hashpassword = await bcrypt.hash(password, 8);
     const { nModified } = await User.updateOne(
       { _id: _id },
@@ -177,13 +179,28 @@ class UserService {
     if (nModified === 0) throw new NotFoundError("User");
   }
 
-  async updateuserbyid(_id, name, gender, dateOfBirth, department, username) {
+  async updateuserbyid(_id, name, gender, dateOfBirth, department, username,checkphone) {
+    if (checkphone===false) {
+      await userValidate.checkInfo(username);
+    }
     const { nModified } = await User.updateOne(
       { _id: _id },
       { name, gender, dateOfBirth, department, username }
     );
 
     if (nModified === 0) throw new NotFoundError("User");
+  }
+
+  async getnewemployeeid() {
+    try {
+      const list_user = await User.find();
+      let highestMaxScore = Math.max(
+        ...list_user.map((value) => value.employid)
+      );
+      return highestMaxScore + 1;
+    } catch (error) {
+      console.log(error);
+    }
   }
 }
 

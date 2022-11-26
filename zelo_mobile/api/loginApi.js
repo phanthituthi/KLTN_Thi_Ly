@@ -36,7 +36,25 @@ const loginApi = {
   fetchUser: username => {
     const url = `${BASE_URL}/users/${username}`;
     return axiosClient.get(url);
+    
   },
+  twilioviryfyOTP(data) {
+    const url = `${BASE_URL}/twilioviryfyOTP`;
+    return axiosClient.post(url, data);
+  },
+  forgetpassword(data) {
+    const url = `${BASE_URL}/forgetpassword`;
+    return axiosClient.put(url, data);
+  },
+  checkuser(data) {
+    const url = `${BASE_URL}/checkuser`;
+    console.log(345,data);
+    return axiosClient.post(url, data);
+  },
+  twiliosendOTP(data) {
+    const url = "/auth/twiliosendOTP";
+    return axiosClient.post(url, data);
+  }
 };
 
 export default loginApi;

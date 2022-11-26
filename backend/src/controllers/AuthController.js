@@ -119,7 +119,7 @@ class AuthController {
     const { phone, code } = req.body;
     try {
       const user = await authService.twilioviryfyOTP(phone, code);
-      res.json(user);
+      res.json(user === 1 ? "Đúng" : "Sai");
     } catch (err) {
       next(err);
     }
@@ -138,6 +138,7 @@ class AuthController {
     const username = req.body.username;
     try {
       const user = await authService.checkuser(username);
+      console.log(user);
       res.json(user);
     } catch (err) {
       next(err);
